@@ -6,6 +6,7 @@ use Algolia\AlgoliaSearch\Exceptions\MissingObjectId;
 use Algolia\AlgoliaSearch\SearchClient;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
+use Leeto\MoonShineAlgoliaSearch\Contracts\HasGlobalAlgoliaSearch;
 use MoonShine\Menu\MenuItem;
 use MoonShine\Menu\MenuSection;
 use MoonShine\MoonShine;
@@ -108,7 +109,8 @@ class AlgoliaSearchIndexes extends Command
             'title' => __($title),
             'section' => $section,
             'description' => $this->getDocumentDescription($groupOrItem),
-            'icon' => $icon
+            'icon' => $icon,
+            'image' => $this->getDocumentImage($groupOrItem)
         ];
     }
 
@@ -140,7 +142,14 @@ class AlgoliaSearchIndexes extends Command
             ])->render();
         }
 
-        return method_exists($groupOrItem, 'globalSearch')
+        return $groupOrItem instanceof HasGlobalAlgoliaSearch
+            ? ($groupOrItem->globalSearch()['icon'] ?? '')
+            : '';
+    }
+
+    private function getDocumentImage(MenuSection|Model $groupOrItem): string
+    {
+        return $groupOrItem instanceof HasGlobalAlgoliaSearch
             ? ($groupOrItem->globalSearch()['image'] ?? '')
             : '';
     }
@@ -159,7 +168,7 @@ class AlgoliaSearchIndexes extends Command
             }
         }
 
-        return method_exists($item, 'globalSearch')
+        return $item instanceof HasGlobalAlgoliaSearch
             ? ($item->globalSearch()['description'] ?? '')
             : '';
     }
