@@ -1,25 +1,26 @@
 {
-    "name": ":vendor_name/:package_name",
-    "description": "Description",
-    "keywords": ["keyword"],
+    "name": "lee-to/moonshine-algolia-search",
+    "description": "Algolia global search for MoonShine",
+    "keywords": ["moonshine"],
     "type": "library",
     "homepage": "https://moonshine.cutcode.dev",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/:vendor_name/:package_name/issues",
-        "source": "https://github.com/:vendor_name/:package_name"
+        "issues": "https://github.com/lee-to/moonshine-algolia-search/issues",
+        "source": "https://github.com/lee-to/moonshine-algolia-search"
     },
     "authors": [
         {
-            "name": "Author name",
-            "email": "author@example.com",
-            "homepage": "https://example.com"
+            "name": "Danil Shutsky",
+            "email": "thecutcode@gmail.com",
+            "homepage": "https://cutocode.dev"
         }
     ],
     "require": {
         "php": "^8.0|^8.1|^8.2",
         "ext-curl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "algolia/algoliasearch-client-php": "^3.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5.8",
@@ -30,17 +31,16 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\PackageName\\": "src/"
+            "Leeto\\MoonShineAlgoliaSearch\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\PackageName\\Tests\\": "tests/",
-            "VendorName\\PackageName\\Database\\Factories\\": "database/factories/"
+            "Leeto\\MoonShineAlgoliaSearch\\Tests\\": "tests/"
         }
     },
     "conflict": {
-        "moonshine/moonshine": "<1.52"
+        "moonshine/moonshine": "<1.55"
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
@@ -49,7 +49,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\PackageName\\Providers\\PackageNameServiceProvider"
+                "Leeto\\MoonShineAlgoliaSearch\\Providers\\MoonShineAlgoliaSearchServiceProvider"
             ]
         }
     }
