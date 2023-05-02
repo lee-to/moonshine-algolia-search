@@ -46,10 +46,8 @@ If you want to customize fields for models, implement the HasGlobalAlgoliaSearch
 use Illuminate\Database\Eloquent\Model;
 use Leeto\MoonShineAlgoliaSearch\Contracts\HasGlobalAlgoliaSearch;
 
-class Post extends Model
+class Post extends Model implements HasGlobalAlgoliaSearch
 {
-    use HasGlobalAlgoliaSearch;
-    
     public function globalSearch(): array
     {
         return [
