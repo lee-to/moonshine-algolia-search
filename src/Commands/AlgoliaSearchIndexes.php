@@ -49,7 +49,7 @@ class AlgoliaSearchIndexes extends Command
                             )
                         );
 
-                        $this->resourceItems($item, $icon, $documents);
+                        $this->resourceItems($item, $icon, $section, $documents);
                     });
                 } else {
                     $documents->push(
@@ -61,7 +61,7 @@ class AlgoliaSearchIndexes extends Command
                         )
                     );
 
-                    $this->resourceItems($groupOrItem, $icon, $documents);
+                    $this->resourceItems($groupOrItem, $icon, $groupOrItem->label(), $documents);
                 }
             });
 
@@ -75,21 +75,22 @@ class AlgoliaSearchIndexes extends Command
         return self::SUCCESS;
     }
 
-    private function resourceItems(MenuSection $groupOrItem, string $icon, &$documents): void
+    private function resourceItems(MenuSection $groupOrItem, string $icon, string $section, &$documents): void
     {
         if ($resource = $groupOrItem->resource()) {
             $resourceItems = $resource->query()->get();
 
             foreach ($resourceItems as $resourceItem) {
                 $resource->setItem($resourceItem);
-                $icon = $this->getDocumentIcon($resourceItem) ?? $icon;
+                $icon = $this->getDocumentIcon($resourceItem) ?: $icon;
 
                 $documents->push(
                     $this->extractDocument(
                         $resourceItem,
                         $resource->route('show', $resourceItem->getKey()),
-                        $resourceItem->{$resource->titleField() ?? $resourceItem->getKeyName()},
-                        $icon
+                        (string) $resourceItem->{$resource->titleField() ?: $resourceItem->getKeyName()},
+                        $icon,
+                        $section
                     )
                 );
             }
@@ -132,7 +133,7 @@ class AlgoliaSearchIndexes extends Command
             ->value();
     }
 
-    private function getDocumentIcon(MenuSection|Model $groupOrItem): string
+    private function getDocumentIcon(MenuSection|Model|CustomPage $groupOrItem): string
     {
         if ($groupOrItem instanceof MenuSection) {
             return view('moonshine::components.icon', [
@@ -147,7 +148,7 @@ class AlgoliaSearchIndexes extends Command
             : '';
     }
 
-    private function getDocumentImage(MenuSection|Model $groupOrItem): string
+    private function getDocumentImage(MenuSection|Model|CustomPage $groupOrItem): string
     {
         return $groupOrItem instanceof HasGlobalAlgoliaSearch
             ? ($groupOrItem->globalSearch()['image'] ?? '')
